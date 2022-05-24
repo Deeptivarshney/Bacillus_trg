@@ -1,18 +1,27 @@
+## Manuscript title 
+
+The workflow is designed to identification of taxonomically restriced genes (TRGs) in Bacillus. There are sevral python scripts in term of finding TRG, which include downloading all the information (eg:proteome,genome and annotation) from NCBI as well 
+finding the TRGs. 
+
+
+### Requiremnts 
+python:3
+ETE toolkit
+
 ## General workflow
 
-General description 
-requirment 
-Readme file description 
-script will be described 
+1. The information related to Bacterial genomes available in GenBank and RefSeq is organized into easily parsable JSON files, including information such as updated taxonomical classification (at all taxonomical levels), URLs for the sequence and annotation files. 
 
-
-Step 1: Download the available protein sequences of all species (all different strains) under the queried
-genus.
+```
+python 01-ncbi_json_genome_assembly.py --taxid 2 
+```
+This python script taxonomic identifier as an arguments and provide the output in JSON format. 
+```
 
 Before downloading the protein sequences for queried genus/species, information of more than
-bacterial genome assemblies available in GenBank and RefSeq is
-organized into easily parsable JSON files, including information such as updated taxonomical
-classification (at all taxonomical levels), URLs for the sequence and annotation files.
+bacterial genome assemblies available in GenBank and RefSeq is organized into easily parsable JSON files, 
+including information such as updated taxonomical classification (at all taxonomical levels), URLs for 
+the sequence and annotation files.
 
 ```python scripts
 
