@@ -5,7 +5,7 @@ Step 1: Download the available protein sequences of all species (all different s
 genus.
 
 Before downloading the protein sequences for queried genus/species, information of more than
-150,000 bacterial genome assemblies (~37,760 species) available in GenBank and RefSeq is
+150,000 bacterial genome assemblies (~37,000 species) available in GenBank and RefSeq is
 organized into easily parsable JSON files, including information such as updated taxonomical
 classification (at all taxonomical levels), URLs for the sequence and annotation files.
 
