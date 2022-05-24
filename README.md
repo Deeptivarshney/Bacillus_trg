@@ -17,27 +17,13 @@ ETE toolkit
 ```
 python 01-ncbi_json_genome_assembly.py --taxid 2 
 ```
-This python script taxonomic identifier as an arguments and provide the output in JSON format. 
+This python script takes taxonomic identifier as an arguments and provide the output in JSON format (taxid:2 for whole bacteria)
 
+2. To get the information about assemblies level for all the genomes queried taxonomy ID from the JSON file
 
-```python scripts
-
-01-ncbi_json_genome_assembly.py
-02-ncbi_json_summary.py
-03-ncbi_json_download.py
 ```
-Step 2: Clustered the protein sequences on species level (generated one protein fasta file for respective
-species which include the all protein sequences from all strains under the same species)
-
-```python scripts
-
-04-ncbi_cluster_proteins.py
+python 02-ncbi_json_summary.py  --json ncbi.json --taxid 1386 --complete_genome --chromosome --scaffold --contig
 ```
 
-Step 3: Split the protein sequences file into different subfiles (1000 seqs in each file) for performing the
-blastp analysis against Uniprot Reference database
+This python script provide the information about the number of assemblies for each level. 
 
-```python scripts
-
-05-ncbi_split_proteins.py
-```
