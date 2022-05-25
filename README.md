@@ -21,7 +21,7 @@ This python script takes taxonomic identifier as an arguments and provide the ou
 ```
 python 02-ncbi_json_summary.py  --json ncbi.json --taxid 1386 --complete_genome --chromosome --scaffold --contig
 ```
-This python script provide the information about the number of assemblies for each level. 
+This python script provides the information about the number of assemblies for each level. 
 
 3. To download all the sequences for all the genomes/proteome for queried taxonomic ID. 
 
@@ -32,3 +32,10 @@ python 03-ncbi_json_download.py --json ncbi.json --taxid 1386 --filetype protein
 ``` 
 python 04-ncbi_cluster_proteins.py --indir ncbi_protein --taxid 1386 --outdir ncbi_protein_cluster
 ```
+
+This python script provides clustered fasta files for each species for queried genus taxid in ncbi_protein_cluster folder 
+
+5. To efficient the BLAST search for identification, one fasta file split into multi fasta files 
+```
+python 05-ncbi_split_proteins.py --indir ncbi_protein_cluster --taxid 1386 --outdir ncbi_protein_clustesplit --nseq 1000 
+
