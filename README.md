@@ -38,4 +38,16 @@ This python script provides clustered fasta files for each species for queried g
 5. To efficient the BLAST search for identification, one fasta file split into multi fasta files 
 ```
 python 05-ncbi_split_proteins.py --indir ncbi_protein_cluster --taxid 1386 --outdir ncbi_protein_clustesplit --nseq 1000 
+``` 
+
+This python script splits 1000 number of sequences per file. 
+
+6. After splitting the sequences into multiple files, perform BLAST search and parse the blast results 
+
+``` 
+python 06_finding_trg.py  --fastadir ncbi_protein_clustesplit --taxid 1386 --blastdir ncbi_blast --evalue 10
+```
+ 
+
+
 
