@@ -53,7 +53,7 @@ python 06_finding_trg.py  --fastadir ncbi_protein_clustesplit --taxid 1386 --bla
  7. Reciprocal Blast search was also implemented this pipeline, A High scorer (bit score) hit was considered as a best hit in both search. After performing forword blast search, add the strainID for each hit and then can be parsed by this script
 
 ```
-python 02_forwrd_reciprocal_hit_parse.py --indir forwrd_blast_result --outdir blastp_fwd_hit_result
+python 07_forwrd_reciprocal_hit_parse.py --indir forwrd_blast_result --outdir blastp_fwd_hit_result
 
 ```
 This python script gives the tab seperated file for each blast result which contains following information : 
