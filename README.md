@@ -1,52 +1,76 @@
 ## Identification of taxonomically restricted genes (TRGs) in Bacillus 
 
-The workflow is designed to identify taxonomically restricted genes (TRGs) in Bacillus. There are several python scripts term for finding TRG, which include downloading all the information (eg: proteome, genome, and annotation) from NCBI as well as finding the TRGs.
+The workflow is designed to identify taxonomically restricted genes (TRGs) in *Bacillus*. The repository contains several python scripts for downloading and handling sequence data from NCBI, parsing BLAST output, and finding the TRGs at the species and genus levels.
 
 ### Requiremnts
-Python (https://www.python.org/) >= 3.3
-
-ETE toolkit (http://etetoolkit.org/)
+1. Python (https://www.python.org/) >= 3.3
+2. ETE toolkit (http://etetoolkit.org/)
+3. BLAST+ 
 
 ## General workflow
 
-1. Before downloading the NCBI data, the information related to Bacterial genomes available in GenBank and RefSeq is organized into easily parsable JSON files, which includes information such as updated taxonomical classification (at all taxonomical levels), URLs for the sequence(s) and annotation file(s).
+1. `01-ncbi_json_genome_assembly.py` provides information related to bacterial genomes available in GenBank and RefSeq and stores it in JSON format. The information includes full taxonomic classification and URLs of the sequence(s) and annotation file(s) at the NCBI FTP server.
 
-For example: To fetch the information of all Bacteria available in NCBI, run the following command : 
+For example, to fetch the information related to all Bacteria (`taxid : 2`) available in GenBank and RefSeq, run the following command: 
 
 ```
 python 01-ncbi_json_genome_assembly.py --taxid 2 
 ```
-This python script takes taxonomic identifier as an argument and provides the output in JSON format (taxid:2 for whole bacteria)
 
-2. To get the information about assemblies level for all the genomes queried taxonomy ID from the JSON file
+[comment]: # Output will be a JSON format which stored all the information for all available genomes (ex:b.cereus.json) 
+*Note: Provided example JSON is just to show the format of all information for only 2 genomes for one Bacillus species (taxid:1396)
 
-```
-python 02-ncbi_json_summary.py  --json ncbi.json --taxid 1386 --complete_genome --chromosome --scaffold --contig
-```
-This python script provides information about the number of available assemblies for each level for Bacillus (taxid: 1386). 
+2. `02-ncbi_json_summary.py` provides information about genome assemblies available for a given bacterial taxonomic unit (e.g., *Bacillus*).
 
-
-3. To download the sequences for the required file type for available genomes by using JSON File. 
+For example, to obtain information on the number of available genomes of *Bacillus* (`taxid: 1386`), run the following command:
 
 ```
-python 03-ncbi_json_download.py --json ncbi.json --taxid 1386 --filetype protein.faa.gz --outdir ncbi_protein --complete_genome  --chromosome --scaffold --contig
+python --json b.cereus.json --taxid 1386 --complete_genome --chromosome --scaffold --contig
 ```
-This python script gives you the choice of the file type to download.
 
-4. To make this pipeline more efficient, protein sequences of all the downloaded genomes under the queried genus were clustered into species files based on identical sequences (generated one protein fasta file for respective species which include the all protein sequences from all strains under the same species)
+#### This will provide the number of available genomes in all the assembly levels(complete_genome,chromosome,scaffold and contig)
+
+
+3. `03-ncbi_json_download.py` downloads the sequence data (protein or genome) of a given taxonomic unit of Bacteria.
+
+For example, to download all proteins of *Bacillus*, run the following command: 
+
+```
+python 03-ncbi_json_download.py --json b.cereus.json --taxid 1386 --filetype protein.faa.gz --outdir ncbi_protein --complete_genome  --chromosome --scaffold --contig
+```
+
+#### In output `ncbi_protein` directory will be created with following structure. For example : `ncbi_protein/1386/1396/GCF_XXXXX/GCF_XXXXX.protein.gz`
+
+
+4. `04-ncbi_cluster_proteins.py` clusters identical protein sequences within species. To make this pipeline more efficient, protein sequences of all the downloaded genomes under the queried genus are clustered into species files based on identical sequences (generated one protein fasta file for respective species which include the all protein sequences from all strains under the same species).
+
 ``` 
-python 04-ncbi_cluster_proteins.py --indir ncbi_protein --taxid 1386 --outdir ncbi_protein_cluster
+python --indir ncbi_protein --taxid 1386 --outdir ncbi_protein_cluster
 ```
-This python script provides one clustered fasta for sequences and a log.json file for sequence id and assembly id for each protein for every species under queried genus taxid in ncbi_protein_cluster (output folder)
 
-5. To efficient the BLAST search for identification, one fasta file split into multi fasta files 
+#### This python script provides one clustered fasta for sequences and a log.json file for `sequence id` and `assembly id` for each protein for every species under queried genus taxid in `ncbi_protein_cluster` (output folder)
+
+#### The output directory will look like this : `ncbi_protein_cluster/1386/1392/1392.protein.faa` and  `ncbi_protein_cluster/1386/1392/log.json` 
+
+
+5. `05-ncbi_split_proteins.py` splits fasta files into multiple smaller fasta files that can be used as queries to BLAST searches.
+
+#### For example, to split fasta files of Bacillus (`taxid: 1386`) into smaller fasta files (1000 sequences per file), run the following command:
+
 ```
 python 05-ncbi_split_proteins.py --indir ncbi_protein_cluster --taxid 1386 --outdir ncbi_protein_clustesplit --nseq 1000 
-``` 
+```
 
-This python script splits 1000 sequences per file. 
+#### The ouput directory will look like this : `ncbi_protein_clustesplit/1386/1392/1392.protein.faa.001`, `ncbi_protein_clustesplit/1386/1396/1396.protein.faa.00*` and so on according to the number of sequences. 
 
-6. After splitting the sequences into multiple files, perform a BLAST search and parse the blast results 
+#### After that, BLAST analysis can be perfomed for all the splitted fasta against the NCBI bacterial proteome by using following command. For example :
+ 
+```blastp -query protein_seq_split/1386/1396/1396.protein.faa.00* -db ncbi_whole_bacteria.protein.faa -outfmt 6 -evalue 10 -num_threads 28 -num_alignments 500 -out protein_seq_split_blast_result/1396.protein.faa.00*```
+
+* Note : `outfmt 6` format stores the output in tabular output in following directory : ```protein_seq_split_blast_result/1396.protein.faa.00*```
+
+6. `python 06_finding_trg.py` parses BLAST output to identify TRGs. 
+For example, to find the TRGs in *Bacillus*, run the following command: 
 
 ``` 
 python 06_finding_trg.py  --fastadir ncbi_protein_clustesplit --taxid 1386 --blastdir ncbi_blast --evalue 10
