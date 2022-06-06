@@ -36,20 +36,20 @@ This will provide the number of available genomes in all the assembly levels(com
 For example, to download all proteins of *Bacillus*, run the following command: 
 
 ```
-python 03-ncbi_json_download.py --json b.cereus.json --taxid 1386 --filetype protein.faa.gz --outdir ncbi_protein --complete_genome  --chromosome --scaffold --contig
+python 03-ncbi_json_download.py --json b.cereus.json --taxid 1386 --filetype protein.faa.gz --outdir protein_seq --complete_genome  --chromosome --scaffold --contig
 ```
 
-In output `ncbi_protein` directory will be created with following structure. For example : `ncbi_protein/1386/1396/GCF_XXXXX/GCF_XXXXX.protein.gz`
+In output `ncbi_protein` directory will be created with following structure. For example : `protein_seq/1386/1396/GCF_XXXXX/GCF_XXXXX.protein.gz`
 
 
 4. `04-ncbi_cluster_proteins.py` clusters identical protein sequences within species. To make this pipeline more efficient, protein sequences of all the downloaded genomes under the queried genus are clustered into species files based on identical sequences (generated one protein fasta file for respective species which include the all protein sequences from all strains under the same species).
 
 ``` 
-python --indir ncbi_protein --taxid 1386 --outdir ncbi_protein_cluster
+python --indir ncbi_protein --taxid 1386 --outdir protein_seq_cluster
 ```
-This python script provides one clustered fasta for sequences and a log.json file for `sequence id` and `assembly id` for each protein for every species under queried genus taxid in `ncbi_protein_cluster` (output folder)
+This python script provides one clustered fasta for sequences and a log.json file for `sequence id` and `assembly id` for each protein for every species under queried genus taxid in `protein_seq_cluster` (output folder)
 
-The output directory will look like this : `ncbi_protein_cluster/1386/1392/1392.protein.faa` and  `ncbi_protein_cluster/1386/1392/log.json` 
+The output directory will look like this : `protein_seq_cluster/1386/1392/1392.protein.faa` and  `protein_seq_cluster/1386/1392/log.json` 
 
 
 5. `05-ncbi_split_proteins.py` splits fasta files into multiple smaller fasta files that can be used as queries to BLAST searches.
@@ -60,7 +60,7 @@ For example, to split fasta files of Bacillus (`taxid: 1386`) into smaller fasta
 python 05-ncbi_split_proteins.py --indir ncbi_protein_cluster --taxid 1386 --outdir ncbi_protein_clustesplit --nseq 1000 
 ```
 
-The ouput directory will look like this : `ncbi_protein_clustesplit/1386/1392/1392.protein.faa.001`, `ncbi_protein_clustesplit/1386/1396/1396.protein.faa.00*` and so on according to the number of sequences. 
+The ouput directory will look like this : `protein_seq_split/1386/1392/1392.protein.faa.001`, `protein_seq_split/1386/1396/1396.protein.faa.00*` and so on according to the number of sequences. 
 
 After that, BLAST analysis can be perfomed for all the splitted fasta against the NCBI bacterial proteome by using following command. For example :
  
