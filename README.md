@@ -17,7 +17,7 @@ For example, to fetch the information related to all Bacteria (`taxid : 2`) avai
 python 01-ncbi_json_genome_assembly.py --taxid 2 
 ```
 
-[comment]: # Output will be a JSON format which stored all the information for all available genomes (ex:b.cereus.json) 
+Output will be a JSON format which stored all the information for all available genomes (ex:b.cereus.json) 
 *Note: Provided example JSON is just to show the format of all information for only 2 genomes for one Bacillus species (taxid:1396)
 
 2. `02-ncbi_json_summary.py` provides information about genome assemblies available for a given bacterial taxonomic unit (e.g., *Bacillus*).
