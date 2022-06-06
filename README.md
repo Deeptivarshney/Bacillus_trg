@@ -23,7 +23,7 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     ```
     python --json b.cereus.json --taxid 1386 --complete_genome --chromosome --scaffold --contig  
     ```
-    This will provide the number of available genomes in all the assembly levels(complete_genome,chromosome,scaffold and contig)  <br />
+    This will provide the number of available genomes in all the assembly levels (complete_genome,chromosome,scaffold and contig)  <br />
     <br />
 3. `03-ncbi_json_download.py` downloads the sequence data (protein or genome) of a given taxonomic unit of Bacteria.  <br /> For example, to download all proteins of *Bacillus*, run the 
     following command:  <br />
@@ -42,39 +42,37 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
 5. `05-ncbi_split_proteins.py` splits fasta files into multiple smaller fasta files that can be used as queries to BLAST searches. <br />
     For example, to split fasta files of Bacillus (`taxid: 1386`) into smaller fasta files (1000 sequences per file), run the following command:
     ```
-    python 05-ncbi_split_proteins.py --indir ncbi_protein_cluster --taxid 1386 --outdir ncbi_protein_clustesplit --nseq 1000 
+    python 05-ncbi_split_proteins.py --indir protein_seq_cluster --taxid 1386 --outdir protein_seq_split --nseq 1000 
     ```
     The output directory will look like this : `protein_seq_split/1386/1392/1392.protein.faa.001`, `protein_seq_split/1386/1396/1396.protein.faa.00*` and so on according to the number of sequences.  <br />
     <br />
 6. After that, BLAST analysis can be perfomed for all the splitted fasta against the NCBI bacterial proteome by using following command. For example :  <br />
     ```
-    blastp -query protein_seq_split/1386/1396/1396.protein.faa.00* -db ncbi_whole_bacteria.protein.faa \
-    -outfmt 6 -evalue 10 -num_threads 28 -num_alignments 500 -out protein_seq_split_blast_result/1396.protein.faa.00*
+    blastp -query protein_seq_split/1386/1396/1396.protein.faa.00* \
+    -db ncbi_whole_bacteria.protein.faa \
+    -outfmt 6 -evalue 10 -num_threads 28 -num_alignments 500 \
+    -out protein_seq_split_blast_result/1396.protein.faa.00*
     ```
     ###### Note : `outfmt 6` format stores the output in tabular output in following directory : ```protein_seq_split_blast_result/1396.protein.faa.00*```  <br />
     <br />
 7. `python 06_finding_trg.py` parses BLAST output to identify TRGs. <br />
     For example, to find the TRGs in *Bacillus*, run the following command: 
     ``` 
-    python 06_finding_trg.py  --fastadir ncbi_protein_clustesplit --taxid 1386 --blastdir ncbi_blast --evalue 10
+    python 06_finding_trg.py  --fastadir protein_seq_split --taxid 1386 --blastdir ncbi_blast --evalue 10
     ```
     As mentioned in the command line for taxid (1386: Bacillus), this python script generates the number of sequences for those that have no homology at provided value (10) on the Genus level. 
     <br />
 
 7. Reciprocal Blast search has also implemented this pipeline, A High scorer (bit score) hit was considered as the best hit in both searches. After performing the forward blast search, add the
-    strain ID for each hit, and then can be parsed by this script
-
+    strain ID for each hit, and then can be parsed by this script <br />
     ```
     python 07_forwrd_reciprocal_hit_parse.py --indir forwrd_blast_result --outdir blastp_fwd_hit_result
-
     ```
-    This python script gives the tab a separated file for each blast result which contains the following information : 
+    This python script gives the tab a separated file for each blast result which contains the following information : <br />
     ``` 
     queryid,sub_genus_taxid,sub_species_taxid,sub_genome,subject_besthit_ids
     ```
-8. After both sides of BLAST searches, reciprocal hits can be detected by running this script :
-
+8. After both sides of BLAST searches, reciprocal hits can be detected by running this script :<br />
     ```
-    python 08_reciprocal_hits.py --qgff bacillus_gff --fblast blastp_fwd_hit_result --rblast reverse_blastp_results --taxid 1386 --outdir reciprocal_hits
-
+     python 08_reciprocal_hits.py --qgff bacillus_gff --fblast blastp_fwd_hit_result --rblast reverse_blastp_results --taxid 1386 --outdir reciprocal_hits
     ```
