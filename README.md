@@ -1,6 +1,6 @@
 ## Identification of taxonomically restricted genes (TRGs) in Bacillus 
 
-The workflow is designed to identify taxonomically restricted genes (TRGs) in *Bacillus*. The repository contains several python scripts for downloading and handling sequence data from NCBI, parsing BLAST output, and finding the TRGs at the species and genus levels.
+The workflow is designed to identify taxonomically restricted genes (TRGs) in *Bacillus*. The repository contains several python scripts for downloading and handling sequence data from NCBI,parsing BLAST output, and finding the TRGs at the species and genus levels.
 
 ### Requiremnts
 1. [Python](https://www.python.org/) >= 3.3
@@ -20,7 +20,7 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     ```
 
     Output will be a JSON format which stored all the information for all available genomes (ex:b.cereus.json) 
-    * Note : Provided example JSON is just to show the format of all information for only 2 genomes for one Bacillus species (taxid:1396).
+    ##### Note : Provided example JSON is just to show the format of all information for only 2 genomes for one Bacillus species (taxid:1396).
 
 
 2. `02-ncbi_json_summary.py` provides information about genome assemblies available for a given bacterial taxonomic unit (e.g., *Bacillus*).
