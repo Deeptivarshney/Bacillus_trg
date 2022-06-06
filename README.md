@@ -47,7 +47,10 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     The output directory will look like this : `protein_seq_split/1386/1392/1392.protein.faa.001`, `protein_seq_split/1386/1396/1396.protein.faa.00*` and so on according to the number of sequences.  <br />
     <br />
 6. After that, BLAST analysis can be perfomed for all the splitted fasta against the NCBI bacterial proteome by using following command. For example :  <br />
-    ```blastp -query protein_seq_split/1386/1396/1396.protein.faa.00* -db ncbi_whole_bacteria.protein.faa -outfmt 6 -evalue 10 -num_threads 28 -num_alignments 500 -out protein_seq_split_blast_result/1396.protein.faa.00*```
+    ```
+    blastp -query protein_seq_split/1386/1396/1396.protein.faa.00* -db ncbi_whole_bacteria.protein.faa \
+    -outfmt 6 -evalue 10 -num_threads 28 -num_alignments 500 -out protein_seq_split_blast_result/1396.protein.faa.00*
+    ```
     ###### Note : `outfmt 6` format stores the output in tabular output in following directory : ```protein_seq_split_blast_result/1396.protein.faa.00*```  <br />
     <br />
 7. `python 06_finding_trg.py` parses BLAST output to identify TRGs. <br />
