@@ -32,7 +32,7 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     ```
     In output `ncbi_protein` directory will be created with following structure. For example : [example/protein_seq/1386/1396/GCF_002199365.1_ASM219936v1](./example/protein_seq/1386/1396/GCF_002199365.1_ASM219936v1/)  <br />
     <br />
-4. After downloading `*.gz` files, unzip all the files by following command: <br />
+4. After downloading `*.gz` files, unzip all the files by following command (example files are already extracted): <br />
     `gzip -d ./example/protein_seq/1386/*/*/*.gz`
 
 5. `04-ncbi_cluster_proteins.py` clusters identical protein sequences within species. To make this pipeline more efficient, protein sequences of all the downloaded genomes under the queried genus
