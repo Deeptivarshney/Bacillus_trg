@@ -101,7 +101,7 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     -out forwrd_blast_result/1396.protein.faa.00*
     ```
 
-    To make the pipeline to more efficient, protein sequences of query and database clustered based on identical on species level. After performing the forward blast search, strain ID can be added for each hit, and then can be parsed by this script
+    To make the pipeline more efficient, protein sequences of query and database clustered based on identical on species level. After performing the forward blast search, strain ID can be added for each hit, and then can be parsed by this script
 
     ```
     python 07_forwrd_reciprocal_hit_parse.py --indir forwrd_blast_result --outdir blastp_fwd_hit_result
