@@ -33,21 +33,22 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     In output `ncbi_protein` directory will be created with following structure. For example : [example/protein_seq/1386/1396/GCF_002199365.1_ASM219936v1](./example/protein_seq/1386/1396/GCF_002199365.1_ASM219936v1/)  <br />
     <br />
 4. After downloading `*.gz` files, unzip all the files by following command (example files are already extracted): <br />
-    `gzip -d ./example/protein_seq/1386/*/*/*.gz`
-
+    ```
+    gzip -d ./example/protein_seq/1386/*/*/*.gz
+    ```
 5. `04-ncbi_cluster_proteins.py` clusters identical protein sequences within species. To make this pipeline more efficient, protein sequences of all the downloaded genomes under the queried genus
     are clustered into species files based on identical sequences (generated one protein fasta file for respective species which include the all protein sequences from all strains under the same species). <br />
     ``` 
     python --indir ncbi_protein --taxid 1386 --outdir protein_seq_cluster
     ```
-    This python script provides one clustered fasta for sequences and a log.json file for `sequence id` and `assembly id` for each protein for every species under queried genus taxid in `protein_seq_cluster` (output folder). The output directory will look like this : [1396.protein.faa](./example/protein_seq_cluster/1386/1396/1396.protein.faa) and  [log.json](./example/protein_seq_cluster/1386/1396/log.json)  <br />
+    This python script provides one clustered fasta for sequences and a log.json file for `sequence id` and `assembly id` for each protein for every species under queried genus taxid in [protein_seq_cluster](./example/protein_seq_cluster) (output folder). The output files will look like this : [1396.protein.faa](./example/protein_seq_cluster/1386/1396/1396.protein.faa) and  [log.json](./example/protein_seq_cluster/1386/1396/log.json)  <br />
     <br />
 6. `05-ncbi_split_proteins.py` splits fasta files into multiple smaller fasta files that can be used as queries to BLAST searches. <br />
     For example, to split fasta files of Bacillus (`taxid: 1386`) into smaller fasta files (1000 sequences per file), run the following command:
     ```
     python 05-ncbi_split_proteins.py --indir protein_seq_cluster --taxid 1386 --outdir protein_seq_split --nseq 1000 
     ```
-    The output splitted files will look like this :[1396.protein.faa.001](./example/protein_seq_split/1386/1396/1396.protein.faa.001), [1396.protein.faa.002](./example/protein_seq_split/1386/1396/1396.protein.faa.002) etc. and so on according to the number of sequences.  <br />
+    The output splitted files will look like this :[1396.protein.faa.001](./example/protein_seq_split/1386/1396/1396.protein.faa.001), [1396.protein.faa.002](./example/protein_seq_split/1386/1396/1396.protein.faa.002) etc. according to the number of sequences per file.  <br />
     <br />
 7. After that, BLAST analysis can be perfomed for all the splitted fasta against the NCBI bacterial proteome by using following command. For example :  <br />
     ```
@@ -89,9 +90,15 @@ The workflow is designed to identify taxonomically restricted genes (TRGs) in *B
     ```
      python 08_reciprocal_hits.py --qgff bacillus_gff --fblast blastp_fwd_hit_result --rblast reverse_blastp_results --taxid 1386 --outdir reciprocal_hits
     ```
-11. tFASTy search performed for idenitified putative TRGs against the non coding region of other NCBI Bacterial genomes.
-    For example : tFASty search for a fasta sequence can be performed by follwing command (assuming `ncbi_genome_assemblies.faa` as database) :
+11. tFASTy can be performed for idenitified putative TRGs against the non coding regions of other NCBI Bacterial genomes.
+    For example : Run the follwing command (assuming `ncbi_genome_assemblies.faa` as database) :
+    ```
+    tfasty36 -m 0 -w 500 -C 50 -T 24 -s BL62 seq.faa ncbi_genome_assemblies.faa >seq.tfasty
+    ```
 
-    ```tfasty36 -m 0 -w 500 -C 50 -T 24 -s BL62 seq.faa ncbi_genome_assemblies.faa >seq.tfasty```
+    
+
+
+
 
 
